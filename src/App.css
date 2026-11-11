@@ -1,0 +1,262 @@
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+main {
+  width: min(100% - 48px, 1100px);
+  margin: 0 auto;
+  padding: 64px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 56px;
+}
+
+h1 {
+  color: #c64f83;
+  font-size: 42px;
+  letter-spacing: -1.5px;
+  margin: 0 0 10px;
+}
+
+.header p {
+  color: #89818a;
+  font-size: 16px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.section-heading h2 {
+  color: #393139;
+  font-size: 25px;
+  margin: 0;
+}
+
+.section-heading span {
+  color: #c64f83;
+  background: #ffe5ef;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.note-card {
+  background: #fff;
+  border: 1px solid #f5e4eb;
+  border-radius: 18px;
+  padding: 24px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 20px rgba(198, 79, 131, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(198, 79, 131, 0.12);
+}
+
+.note-card h3 {
+  color: #493640;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+.note-card p {
+  color: #817780;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+.note-date {
+  color: #c28ba4;
+  font-size: 12px;
+  margin-top: auto;
+}
+
+/* Tablet */
+@media (max-width: 850px) {
+  .notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 550px) {
+  main {
+    width: calc(100% - 32px);
+    padding: 36px 0;
+  }
+
+  .header {
+    margin-bottom: 38px;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .note-card {
+    min-height: 160px;
+  }
+
+}
+
+.add-note-card {
+  min-height: 190px;
+  border: 2px dashed #edb5cc;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #c64f83;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-note-card:hover {
+  background: #fff0f6;
+  border-color: #c64f83;
+  transform: translateY(-4px);
+}
+
+.plus-icon {
+  font-size: 36px;
+  font-weight: 300;
+}
+
+/* New note modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(70, 40, 55, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 420px;
+  background: #fffafd;
+  border: 1px solid #f5dce7;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 15px 50px rgba(120, 50, 85, 0.18);
+  text-align: center;
+  animation: modalAppear 0.2s ease;
+}
+
+.modal-content h2 {
+  color: #c64f83;
+  font-size: 26px;
+  margin: 0 0 10px;
+}
+
+.modal-content p {
+  color: #89818a;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.modal-content button {
+  border: none;
+  border-radius: 12px;
+  background: #c64f83;
+  color: white;
+  padding: 11px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-content button:hover {
+  background: #a83d6d;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile modal */
+@media (max-width: 550px) {
+  .modal-content {
+    padding: 26px 20px;
+  }
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-buttons button:first-child {
+  background: #f5e4eb;
+  color: #a64b73;
+}
+
+.modal-buttons button:first-child:hover {
+  background: #edd2df;
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 13px 15px;
+  margin-bottom: 14px;
+  border: 1px solid #f0d5e1;
+  border-radius: 12px;
+  background: #fff;
+  color: #493640;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+  border-color: #c64f83;
+}
+
+.modal-content textarea {
+  min-height: 130px;
+  resize: vertical;
+}
