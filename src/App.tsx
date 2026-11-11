@@ -12,6 +12,7 @@ function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [notes, setNotes] = useState<Note[]>([
     {
       id: 1,
@@ -44,22 +45,40 @@ function App() {
       return;
     }
 
-    const newNote: Note = {
-      id: Date.now(),
-      title: title,
-      content: content,
-      date: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-    };
+    if (editingNoteId !== null) {
+      setNotes(
+        notes.map((note) =>
+          note.id === editingNoteId ? { ...note, title, content } : note,
+        ),
+      );
+    } else {
+      const newNote: Note = {
+        id: Date.now(),
+        title: title,
+        content: content,
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
+      };
 
-    setNotes([...notes, newNote]);
+      setNotes([...notes, newNote]);
+    }
 
     setTitle("");
     setContent("");
+    setEditingNoteId(null);
     setIsFormOpen(false);
+  }
+  function handleDeleteNote(id: number) {
+    setNotes(notes.filter((note) => note.id !== id));
+  }
+  function handleEditNote(note: Note) {
+    setEditingNoteId(note.id);
+    setTitle(note.title);
+    setContent(note.content);
+    setIsFormOpen(true);
   }
   return (
     <main>
@@ -78,7 +97,21 @@ function App() {
 
         <div className="notes-grid">
           {notes.map((note) => (
-            <article className="note-card" key={note.id}>
+            <article
+              className="note-card"
+              key={note.id}
+              onClick={() => handleEditNote(note)}
+            >
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleDeleteNote(note.id);
+                }}
+                aria-label="Delete note"
+              >
+                🗑️
+              </button>
               <h3>{note.title}</h3>
               <p>{note.content}</p>
               <span className="note-date">{note.date}</span>
@@ -87,7 +120,12 @@ function App() {
           <button
             className="add-note-card"
             type="button"
-            onClick={() => setIsFormOpen(true)}
+            onClick={() => {
+              setTitle("");
+              setContent("");
+              setEditingNoteId(null);
+              setIsFormOpen(true);
+            }}
           >
             <span className="plus-icon">+</span>
             <span>Add a new note</span>

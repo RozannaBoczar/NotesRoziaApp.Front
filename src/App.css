@@ -260,3 +260,24 @@ h1 {
   min-height: 130px;
   resize: vertical;
 }
+
+.note-card {
+  position: relative;
+}
+
+.note-card button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.note-card button:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
