@@ -1,69 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getNotes, deleteNote, createNote, updateNote } from "./services/api";
 import "./App.css";
 
-type Note = {
-  id: number;
+export type Note = {
+  id?: string;
   title: string;
   content: string;
-  date: string;
+  date?: string;
 };
 
 function App() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: 1,
-      title: "Shopping list",
-      content: "Milk, eggs, bread, coffee and some fresh vegetables.",
-      date: "Nov 10, 2026",
-    },
-    {
-      id: 2,
-      title: "Project ideas",
-      content:
-        "Improve NotesApp, learn Playwright and explore new React features.",
-      date: "Nov 9, 2026",
-    },
-    {
-      id: 3,
-      title: "Weekend plans",
-      content: "Go for a walk, read a book and finally organize my desk.",
-      date: "Nov 8, 2026",
-    },
-    {
-      id: 4,
-      title: "Things to remember",
-      content: "Stay organized, take breaks and remember to enjoy the process.",
-      date: "Nov 7, 2026",
-    },
-  ]);
-  function handleAddNote() {
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
+  async function handleAddNote() {
     if (!title.trim() || !content.trim()) {
       return;
     }
 
     if (editingNoteId !== null) {
-      setNotes(
-        notes.map((note) =>
-          note.id === editingNoteId ? { ...note, title, content } : note,
-        ),
-      );
+      try {
+        await updateNote(editingNoteId, title, content);
+
+        setNotes((currentNotes) =>
+          currentNotes.map((note) =>
+            note.id === editingNoteId ? { ...note, title, content } : note,
+          ),
+        );
+      } catch (error) {
+        console.error("Error updating note:", error);
+        return;
+      }
     } else {
       const newNote: Note = {
-        id: Date.now(),
         title: title,
         content: content,
-        date: new Date().toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        }),
       };
 
-      setNotes([...notes, newNote]);
+      try {
+        await createNote(newNote);
+        setNotes((currentNotes) => [...currentNotes, newNote]);
+      } catch (error) {
+        console.error("Error creating note:", error);
+      }
     }
 
     setTitle("");
@@ -71,15 +52,35 @@ function App() {
     setEditingNoteId(null);
     setIsFormOpen(false);
   }
-  function handleDeleteNote(id: number) {
-    setNotes(notes.filter((note) => note.id !== id));
+  async function handleDeleteNote(id?: string) {
+    if (!id) return;
+
+    try {
+      await deleteNote(id);
+
+      setNotes((currentNotes) => currentNotes.filter((note) => note.id !== id));
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   }
-  function handleEditNote(note: Note) {
-    setEditingNoteId(note.id);
+  async function handleEditNote(note: Note) {
+    setEditingNoteId(note.id ?? null);
     setTitle(note.title);
     setContent(note.content);
     setIsFormOpen(true);
   }
+  useEffect(() => {
+    async function loadNotes() {
+      try {
+        const data = await getNotes();
+        setNotes(data);
+      } catch (error) {
+        console.error("Error loading notes:", error);
+      }
+    }
+
+    loadNotes();
+  }, []);
   return (
     <main>
       <header className="header">
