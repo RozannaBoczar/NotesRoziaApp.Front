@@ -52,8 +52,8 @@ Make sure you have installed:
 Clone the backend and frontend repositories:
 
 ```bash
-git clone <backend-repository-url>
-git clone <frontend-repository-url>
+git clone <[backend-repository-url](https://github.com/RozannaBoczar/NotesRoziaApp)>
+git clone <[frontend-repository-url](https://github.com/RozannaBoczar/NotesRoziaApp.Front)>
 ```
 
 ### 2. Configure the database
